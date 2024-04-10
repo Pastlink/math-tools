@@ -3,15 +3,15 @@ from math import sqrt
 from tester import test_all
 
 
-def square(n):
+def square(n) -> int | float:
     return n * n
 
 
-def square_root(n):
+def square_root(n) -> int | float:
     if n < 0:
-        return check_if_int(sqrt(n)) * -1
+        return check_if_int(round(sqrt(n * -1), 2)) * -1
 
-    return check_if_int(sqrt(n))
+    return check_if_int(round(sqrt(n), 2))
 
 
 def print_result(data):
@@ -19,14 +19,60 @@ def print_result(data):
         print(colorize("No valid parameters!", "RED"))
     else:
         data = check_if_int(float(data))
+        sq_root = square_root(data)
+        
+        if isinstance(sq_root, float):
+            equal = "≈"
+        else:
+            equal = "="
+
         print(f'{colorize(f'{data}²', "BLUE")} =', square(data))
-        print(f'{colorize(f'√{data}', "GREEN")} =', square_root(data))
+        if data < 0:
+            print(f'{colorize(f'-√{data * -1}', "GREEN")} {equal}', sq_root)
+        else:
+            print(f'{colorize(f'√{data}', "GREEN")} {equal}', sq_root)
+
+
+def perfect_square_roots():
+    perfect_squares = []
+
+    while True:
+        n = input("Number of perfect squares: ")
+        if n:
+            try:
+                n = int(n)
+                for i in range(1, n + 1):
+                    perfect_squares.append((square(i), i))
+                print_square_roots(perfect_squares)
+                continue
+            except ValueError:
+                print(colorize("Invalid input!", "RED"))
+                continue
+        break
+
+
+def print_square_roots(array: list):
+    for i, j in array:
+        spacei, spacej = " ", " "
+        if len(str(i)) == 1:
+            spacei = "   "
+        elif len(str(i)) == 2:
+            spacei = "  "
+        if len(str(j)) == 1:
+            spacej = "  "
+        length = len(f"|{spacei}{i} |{spacej}{j} |")
+
+        print("|-" + f'{"-" * (length - 4)}' + "-|")
+        print(f"|{spacei}{i} |{spacej}{j} |")
+    print("-" * length)
 
 
 def main():
     while True:
         data = input("Find square and square root of: ")
-        if data:
+        if data == "perfect":
+            perfect_square_roots()
+        elif data:
             try:
                 print_result(clean_string(data))
             except ValueError:

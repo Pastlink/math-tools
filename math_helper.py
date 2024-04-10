@@ -25,7 +25,7 @@ while True:
         try:
             option = int(option) - 1
         except ValueError:
-            print("Invalid input. Select using numbers.")
+            print(colorize("Invalid input. Select using numbers.", "RED"))
             continue
     match option:
         case 0:

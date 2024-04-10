@@ -32,14 +32,14 @@ def clean_array_data(array, index=0) -> list[float]:
 
 # Iterate over sub-array of array, return floats only.
 def clean_string(sub_array: str):
-    valid_symbols = [".", ":", "/"]
+    valid_symbols = [".", ":", "/"] # Keep negative, float, time and ratios. 
     clean_values = ""
 
     for i in range(0, len(sub_array)):
         try:
             clean_values += str(int(sub_array[i]))
         except ValueError:
-            if sub_array[i] in valid_symbols and clean_values != "":
+            if sub_array[i] in valid_symbols and clean_values != "" or sub_array[i] == "-":
                 clean_values += sub_array[i]
             continue
 
