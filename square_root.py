@@ -9,9 +9,9 @@ def square(n) -> int | float:
 
 def square_root(n) -> int | float:
     if n < 0:
-        return check_if_int(round(sqrt(n * -1), 2)) * -1
+        return check_if_int(sqrt(n * -1)) * -1
 
-    return check_if_int(round(sqrt(n), 2))
+    return check_if_int(sqrt(n))
 
 
 def print_result(data):
@@ -19,7 +19,7 @@ def print_result(data):
         print(colorize("No valid parameters!", "RED"))
     else:
         data = check_if_int(float(data))
-        sq_root = square_root(data)
+        sq_root = round(square_root(data), 2)
         
         if isinstance(sq_root, float):
             equal = "≈"
