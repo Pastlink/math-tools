@@ -1,6 +1,6 @@
 # Python program to print prime factors
 from math import sqrt
-from common_tools import colorize
+from common_tools import colorize, cprint
 from tester import test_all
 
 
@@ -99,7 +99,7 @@ def main():
             try:
                 print_result(int(n))
             except ValueError:
-                print("Invalid input.")
+                cprint("Invalid input.", "RED")
                 continue
         else:
             print("Back...")

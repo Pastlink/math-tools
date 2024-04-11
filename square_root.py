@@ -20,7 +20,7 @@ def print_result(data):
     else:
         data = check_if_int(float(data))
         sq_root = round(square_root(data), 2)
-        
+
         if isinstance(sq_root, float):
             equal = "≈"
         else:

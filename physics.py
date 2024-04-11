@@ -23,7 +23,7 @@ def print_result(data):
 
 def main():
     while True:
-        data = input("Find falling time from: ")
+        data = input("Data: ")
         if data:
             try:
                 print_result(clean_string(data))
