@@ -73,3 +73,7 @@ def colorize(data, color: str):
     except AttributeError:
         print(f"Unknown color: '{color}'")
         return f"{colors.RED}ERROR{colors.ENDCOLOR}"
+
+# Shorter, color print.
+def cprint(data, color: str):
+    print(colorize(data, color))
