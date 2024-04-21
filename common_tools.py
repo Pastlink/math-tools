@@ -21,16 +21,16 @@ def clean_array_data(array, index=0) -> list[float]:
         array[index] = float(array[index])
     except ValueError:
         array[index] = clean_string(array[index])
-        if array[index] is None:
+        if not array[index]:
             array.pop(index)
-            index -= 1
+        index -= 1
 
     clean_array_data(array, index + 1)
 
     return array
 
 
-# Iterate over sub-array of array, return floats only.
+# Iterate over sub-array of array, return floats, hours or fractions as strings only.
 def clean_string(sub_array: str):
     valid_symbols = [".", ":", "/"] # Keep float, time and ratios. 
     clean_values = ""
