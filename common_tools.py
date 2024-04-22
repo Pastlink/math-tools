@@ -12,27 +12,25 @@ def check_if_int(num: float):
 
 
 ### DATA CLEANERS
-# Iterate over array, return array of floats only.
-def clean_array_data(array, index=0) -> list[float]:
-    if index >= len(array):
-        return array
+# Iterate over array, return array of floats or number strings.
+def clean_array_data(array: list) -> list:
+    clean_array = []
+    for i in range(0, len(array)):
+        try:
+            clean_array.append(float(array[i]))
+        except ValueError:
+            new_value = clean_string(array[i])
+            try:
+                clean_array.append(float(new_value))
+            except ValueError:
+                clean_array.append(new_value)
 
-    try:
-        array[index] = float(array[index])
-    except ValueError:
-        array[index] = clean_string(array[index])
-        if not array[index]:
-            array.pop(index)
-        index -= 1
-
-    clean_array_data(array, index + 1)
-
-    return array
+    return list(filter(None, clean_array))
 
 
 # Iterate over sub-array of array, return floats, hours or fractions as strings only.
 def clean_string(sub_array: str):
-    valid_symbols = [".", ":", "/"] # Keep float, time and ratios. 
+    valid_symbols = [".", ":", "/"] # Keep float, hours and fractions. 
     clean_values = ""
 
     for i in range(0, len(sub_array)):
