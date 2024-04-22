@@ -1,4 +1,4 @@
-from common_tools import get_data_list, clean_array_data, check_if_int, colorize
+from common_tools import cprint, get_data_list, clean_array_data, check_if_int, colorize
 
 
 def mean(array: list):
@@ -36,7 +36,7 @@ def mode(array: list):
 
 def print_result(values: list):
     if len(values) == 0:
-        print("List is empty!")
+        cprint("List is empty!", "RED")
     else:
         values.sort()
         print(colorize("Mean:", "BLUE"), mean(values))
