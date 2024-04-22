@@ -3,6 +3,7 @@ import prime_factorization
 import ratios_rate
 import square_root
 import physics
+import circ_area
 from common_tools import colorize
 
 
@@ -16,7 +17,7 @@ def print_options(func_list: list):
     print("".join(lst))
 
 
-functions = ["Average", "Prime Factorization", "Ratio and Rate", "Square Root", "Basic Physics"]
+functions = ["Average", "Prime Factorization", "Ratio and Rate", "Square Root", "Basic Physics", "Circumference and Area"]
 
 print("Options available:")
 while True:
@@ -39,6 +40,8 @@ while True:
             square_root.main()
         case 4:
             physics.main()
+        case 5:
+            circ_area.main()
         case _:
             print("Exit...")
             break
