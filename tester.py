@@ -25,19 +25,19 @@ def test(function_data, expected_data, test_name: str, test_num=0):
 def test_all(func, param: list, expected: list):
     FUNC_TESTED = func.__name__
     TEST_LENGTH = len(param)
-    passed = 0
+    test_passed = 0
 
     print(f'DEBUG: {colorize(FUNC_TESTED, "BLUE")} TESTMODE\n')
 
     for i in range(0, TEST_LENGTH):
         if isinstance(param[i], tuple):
-            passed += test(func(*param[i]), expected[i], f"{FUNC_TESTED}{param[i]}", i)
+            test_passed += test(func(*param[i]), expected[i], f"{FUNC_TESTED}{param[i]}", i)
         else:
-            passed += test(func(param[i]), expected[i], f"{FUNC_TESTED}({param[i]})", i)
+            test_passed += test(func(param[i]), expected[i], f"{FUNC_TESTED}({param[i]})", i)
 
-    failed = TEST_LENGTH - passed
+    test_failed = TEST_LENGTH - test_passed
     total_tests = colorize(f"TOTAL TESTS: {TEST_LENGTH}", "BLUE")
-    test_passed = colorize(f"TEST PASSED: {passed}", "GREEN")
-    test_failed = colorize(f"TEST FAILED: {failed}", "RED")
+    test_passed = colorize(f"TEST PASSED: {test_passed}", "GREEN")
+    test_failed = colorize(f"TEST FAILED: {test_failed}", "RED")
 
     print(f"\n{total_tests} | {test_passed} | {test_failed}")
