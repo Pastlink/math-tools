@@ -1,4 +1,4 @@
-from common_tools import get_data_list, clean_array_data, check_if_int, colorize
+from common_tools import get_data_list, clean_array_data, check_if_int, colorize, cprint
 from fractions import Fraction
 from tester import test_all
 
@@ -26,7 +26,7 @@ def print_result(data):
     ratio = ratios(*params)
 
     if len(params) == 0:
-        print(colorize("No valid parameters!", "RED"))
+        cprint("No valid parameters!", "RED")
     else:
         print(colorize("Ratio:", "BLUE"), ratio)
         print(colorize("Rate:", "GREEN"), rate(ratio))
@@ -39,7 +39,7 @@ def main():
             try:
                 print_result(data)
             except ValueError:
-                print("Invalid input.")
+                cprint("Invalid input.", "RED")
                 continue
         else:
             print("Back...")
@@ -85,6 +85,6 @@ if __name__ == "__main__":
     test_all(ratios, to_test, to_expect)
 
     to_test = [ratios(3.99, 24)]
-    to_expect = ["0.17/1"]
+    to_expect = ["0.166/1"]
 
     test_all(rate, to_test, to_expect)
