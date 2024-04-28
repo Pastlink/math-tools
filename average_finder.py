@@ -1,8 +1,8 @@
-from common_tools import cprint, get_data_list, clean_array_data, check_if_int, colorize
+from common_tools import cprint, get_data_list, clean_array_data, is_int
 
 
 def mean(array: list):
-    return check_if_int(round(sum(array) / len(array), 2))
+    return is_int(round(sum(array) / len(array), 2))
 
 
 # Array should always be sorted, else result could be wrong.
@@ -13,7 +13,7 @@ def median(array: list):
     else:
         med = array[median_array]
 
-    return check_if_int(med)
+    return is_int(med)
 
 
 def mode(array: list):
@@ -26,10 +26,10 @@ def mode(array: list):
     max_freq = max(freq.values())
     for key in freq:
         if freq[key] == max_freq:
-            mod.append(str(check_if_int(key)))
+            mod.append(str(is_int(key)))
 
     if len(freq) == len(mod):
-        return None
+        return "None"
     else:
         return " ".join(mod)
 
@@ -39,9 +39,9 @@ def print_result(values: list):
         cprint("List is empty!", "RED")
     else:
         values.sort()
-        print(colorize("Mean:", "BLUE"), mean(values))
-        print(colorize("Median:", "GREEN"), median(values))
-        print(colorize("Mode:", "RED"), mode(values))
+        cprint("Mean:  ", "BLUE", mean(values))
+        cprint("Median:", "GREEN", median(values))
+        cprint("Mode:  ", "RED", mode(values))
 
 
 def main():
@@ -51,7 +51,7 @@ def main():
             print_result(clean_array_data(values))
             continue
         else:
-            print("Back...")
+            cprint("Back...", "YELLOW")
             break
 
 

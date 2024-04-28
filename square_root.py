@@ -1,4 +1,4 @@
-from common_tools import check_if_int, clean_string, colorize
+from common_tools import is_int, clean_string, cprint
 from math import sqrt
 from tester import test_all
 
@@ -9,16 +9,16 @@ def square(n) -> int | float:
 
 def square_root(n) -> int | float:
     if n < 0:
-        return check_if_int(sqrt(n * -1)) * -1
+        return is_int(sqrt(n * -1)) * -1
 
-    return check_if_int(sqrt(n))
+    return is_int(sqrt(n))
 
 
 def print_result(data):
     if len(data) == 0:
-        print(colorize("No valid parameters!", "RED"))
+        cprint("No valid parameters!", "RED")
     else:
-        data = check_if_int(float(data))
+        data = is_int(float(data))
         sq_root = round(square_root(data), 2)
 
         if isinstance(sq_root, float):
@@ -26,11 +26,11 @@ def print_result(data):
         else:
             equal = "="
 
-        print(f'{colorize(f'{data}²', "BLUE")} =', square(data))
+        cprint(f'{data}²', "BLUE", f'= {square(data)}')
         if data < 0:
-            print(f'{colorize(f'-√{data * -1}', "GREEN")} {equal}', sq_root)
+            cprint(f'-√{data * -1}', "GREEN", f'{equal} {sq_root}')
         else:
-            print(f'{colorize(f'√{data}', "GREEN")} {equal}', sq_root)
+            cprint(f'√{data}', "GREEN", f'{equal} {sq_root}')
 
 
 def perfect_square_roots():
@@ -46,7 +46,7 @@ def perfect_square_roots():
                 print_square_roots(perfect_squares)
                 continue
             except ValueError:
-                print(colorize("Invalid input!", "RED"))
+                cprint("Invalid input!", "RED")
                 continue
         break
 
@@ -76,10 +76,10 @@ def main():
             try:
                 print_result(clean_string(data))
             except ValueError:
-                print("Invalid input.")
+                cprint("Invalid input.", "RED")
                 continue
         else:
-            print("Back...")
+            cprint("Back...", "YELLOW")
             break
 
 

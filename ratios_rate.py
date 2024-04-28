@@ -1,9 +1,9 @@
-from common_tools import get_data_list, clean_array_data, check_if_int, colorize, cprint
+from common_tools import get_data_list, clean_array_data, is_int, cprint
 from fractions import Fraction
 from tester import test_all
 
 
-def ratios(numerator, denominator=1.0):
+def ratio(numerator, denominator=1.0):
     num, den = Fraction(numerator), Fraction(denominator)
     ratio = str(Fraction(num, den).limit_denominator(max_denominator=1000000))
 
@@ -16,20 +16,20 @@ def ratios(numerator, denominator=1.0):
 def rate(ratio):
     num, den = ratio.split("/")
 
-    result = check_if_int(round(int(num) / int(den), 3))
-
-    return f"{result}/1"
+    return is_int(float(num) / float(den))
 
 
 def print_result(data):
     params = tuple(clean_array_data(data))
-    ratio = ratios(*params)
-
     if len(params) == 0:
         cprint("No valid parameters!", "RED")
+    elif len(params) > 2:
+        cprint("No more than 2 parameters!", "RED")
     else:
-        print(colorize("Ratio:", "BLUE"), ratio)
-        print(colorize("Rate:", "GREEN"), rate(ratio))
+        ratios = ratio(*params)
+        rates = round(rate(ratios), 3)
+        cprint("Ratio:", "BLUE", ratios)
+        cprint("Rate: ", "GREEN", f"{rates}/1")
 
 
 def main():
@@ -42,7 +42,7 @@ def main():
                 cprint("Invalid input.", "RED")
                 continue
         else:
-            print("Back...")
+            cprint("Back...", "YELLOW")
             break
 
 
@@ -82,9 +82,9 @@ if __name__ == "__main__":
         "9/22",
     ]
 
-    test_all(ratios, to_test, to_expect)
+    test_all(ratio, to_test, to_expect)
 
-    to_test = [ratios(3.99, 24)]
+    to_test = [ratio(3.99, 24)]
     to_expect = ["0.166/1"]
 
     test_all(rate, to_test, to_expect)

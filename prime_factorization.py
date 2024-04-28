@@ -1,6 +1,6 @@
 # Python program to print prime factors
 from math import sqrt
-from common_tools import colorize, cprint
+from common_tools import cprint
 from tester import test_all
 
 
@@ -47,36 +47,6 @@ def prime_factorization(n: int):
     return f'{", ".join(prime_factors)}', f'{" × ".join(exponents)}'
 
 
-def prime_numbers(n: int):
-    MAX = 10000
-
-    if n > MAX:
-        ans = input(
-            colorize(
-                f"""Your input goes over {MAX}!
-Calculating its primes might take a long time.
-Type 'YES, PRINT THEM' if you want to print them anyway. """,
-                "YELLOW",
-            )
-        )
-        if ans != "YES, PRINT THEM":
-            return "Skipped."
-
-    primes = []
-
-    if n < 2:
-        return "None"
-
-    for i in range(2, n + 1):
-        for j in range(2, (i // 2) + 1):
-            if i % j == 0:
-                break
-        else:
-            primes.append(str(i))
-
-    return ", ".join(primes)
-
-
 def get_super(x):
     normal = "123456789"
     super_s = "¹²³⁴⁵⁶⁷⁸⁹"
@@ -86,8 +56,8 @@ def get_super(x):
 
 def print_result(n: int):
     factors, exponents = prime_factorization(n)
-    print(colorize("Factors:", "BLUE"), factors)
-    print(colorize("Exponents:", "GREEN"), exponents)
+    cprint("Factors:", "BLUE", factors)
+    cprint("Exponents:", "GREEN", exponents)
     # print(colorize("Primes:", "RED"), prime_numbers(n))
 
 
@@ -102,9 +72,38 @@ def main():
                 cprint("Invalid input.", "RED")
                 continue
         else:
-            print("Back...")
+            cprint("Back...", "YELLOW")
             break
 
+
+# def prime_numbers(n: int):
+#     MAX = 10000
+
+#     if n > MAX:
+#         ans = input(
+#             colorize(
+#                 f"""Your input goes over {MAX}!
+# Calculating its primes might take a long time.
+# Type 'YES, PRINT THEM' if you want to print them anyway. """,
+#                 "YELLOW",
+#             )
+#         )
+#         if ans != "YES, PRINT THEM":
+#             return "Skipped."
+
+#     primes = []
+
+#     if n < 2:
+#         return "None"
+
+#     for i in range(2, n + 1):
+#         for j in range(2, (i // 2) + 1):
+#             if i % j == 0:
+#                 break
+#         else:
+#             primes.append(str(i))
+
+#     return ", ".join(primes)
 
 if __name__ == "__main__":
     to_test = [
