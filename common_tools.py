@@ -10,6 +10,7 @@ def is_int(num: float | int) -> float | int:
     else:
         return num
 
+
 def to_num(*strings):
     new_nums = []
     for string in strings:
@@ -24,17 +25,18 @@ def to_num(*strings):
 
     return tuple(new_nums)
 
+
 ### DATA CLEANERS
 # Iterate over array, return array of floats or number strings.
 def clean_array_data(array: list) -> list:
     clean_array = []
     for i in range(0, len(array)):
         try:
-            clean_array.append(float(array[i]))
+            clean_array.append(int(array[i]))
         except ValueError:
             new_value = clean_string(array[i])
             try:
-                clean_array.append(float(new_value))
+                clean_array.append(int(new_value))
             except ValueError:
                 clean_array.append(new_value)
 
@@ -52,7 +54,7 @@ def clean_string(sub_array: str):
         except ValueError:
             if (
                 sub_array[i] in valid_symbols
-                and clean_values != ""
+                and "." not in clean_values
                 or sub_array[i] == "-"
             ):  # Also keep negative.
                 clean_values += sub_array[i]
