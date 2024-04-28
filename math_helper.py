@@ -4,7 +4,8 @@ import ratios_rate
 import square_root
 import physics
 import circ_area
-from common_tools import colorize
+import percent_converter
+from common_tools import cprint, colorize
 
 
 def print_options(func_list: list):
@@ -17,7 +18,15 @@ def print_options(func_list: list):
     print("".join(lst))
 
 
-functions = ["Average", "Prime Factorization", "Ratio and Rate", "Square Root", "Basic Physics", "Circumference and Area"]
+functions = [
+    "Average",
+    "Prime Factorization",
+    "Ratio and Rate",
+    "Square Root",
+    "Basic Physics",
+    "Circumference and Area",
+    "Percent",
+]
 
 print("Options available:")
 while True:
@@ -27,7 +36,7 @@ while True:
         try:
             option = int(option) - 1
         except ValueError:
-            print(colorize("Invalid input. Select using numbers.", "RED"))
+            cprint("Invalid input. Select using numbers.", "RED")
             continue
     match option:
         case 0:
@@ -42,6 +51,8 @@ while True:
             physics.main()
         case 5:
             circ_area.main()
+        case 6:
+            percent_converter.main()
         case _:
-            print("Exit...")
+            cprint("Exit...", "GREEN")
             break
