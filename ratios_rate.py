@@ -3,9 +3,14 @@ from fractions import Fraction
 from tester import test_all
 
 
-def ratio(numerator, denominator=1.0):
+def simplify(numerator, denominator):
     num, den = Fraction(numerator), Fraction(denominator)
-    ratio = str(Fraction(num, den).limit_denominator(max_denominator=1000000))
+
+    return str(Fraction(num, den).limit_denominator(max_denominator=1000000))
+
+
+def ratio(numerator, denominator=1.0):
+    ratio = simplify(numerator, denominator)
 
     if "/" not in ratio:
         ratio += "/1"
