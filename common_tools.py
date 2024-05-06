@@ -11,17 +11,14 @@ def is_int(num: float | int) -> float | int:
         return num
 
 
+# Take any amount of number strings and cast into float or int
 def to_num(*strings):
     new_nums = []
     for string in strings:
         try:
-            string = float(string)
+            new_nums.append(is_int(float(string)))
         except ValueError:
             continue
-        if isinstance(is_int(string), int):
-            new_nums.append(int(string))
-        else:
-            new_nums.append(string)
 
     return tuple(new_nums)
 
@@ -43,9 +40,9 @@ def clean_array_data(array: list) -> list:
     return list(filter(None, clean_array))
 
 
-# Iterate over sub-array of array, return floats, hours or fractions as strings only.
+# Iterate over string's chars, return floats, hours, fractions and percentage as strings.
 def clean_string(sub_array: str):
-    valid_symbols = [".", ":", "/"]  # Keep float, hours and fractions.
+    valid_symbols = [".", ":", "/", "%"]  # Keep float, hours and fractions and percentage.
     clean_values = ""
 
     for i in range(0, len(sub_array)):
@@ -65,25 +62,26 @@ def clean_string(sub_array: str):
 
 ### BASH COLORS
 class colors:
-    BLACK = "\033[30m"
-    RED = "\033[31m"
-    GREEN = "\033[32m"
-    YELLOW = "\033[33m"
-    BLUE = "\033[34m"
-    MAGENTA = "\033[35m"
-    CYAN = "\033[36m"
-    LIGHTGRAY = "\033[37m"
-    GRAY = "\033[90m"
-    LIGHTRED = "\033[91m"
-    LIGHTGREEN = "\033[92m"
-    LIGHTYELLOW = "\033[93m"
-    LIGHTBLUE = "\033[94m"
+    BLACK        = "\033[30m"
+    RED          = "\033[31m"
+    GREEN        = "\033[32m"
+    YELLOW       = "\033[33m"
+    BLUE         = "\033[34m"
+    MAGENTA      = "\033[35m"
+    CYAN         = "\033[36m"
+    LIGHTGRAY    = "\033[37m"
+    GRAY         = "\033[90m"
+    LIGHTRED     = "\033[91m"
+    LIGHTGREEN   = "\033[92m"
+    LIGHTYELLOW  = "\033[93m"
+    LIGHTBLUE    = "\033[94m"
     LIGHTMAGENTA = "\033[95m"
-    LIGHTCYAN = "\033[96m"
-    WHITE = "\033[97m"
-    ENDCOLOR = "\033[0m"
+    LIGHTCYAN    = "\033[96m"
+    WHITE        = "\033[97m"
+    ENDCOLOR     = "\033[0m"
 
 
+# Add color to text in the terminal!
 def colorize(data, color: str):
     try:
         return f"{getattr(colors, color.upper())}{data}{colors.ENDCOLOR}"
@@ -92,7 +90,7 @@ def colorize(data, color: str):
         return f"{colors.RED}ERROR{colors.ENDCOLOR}"
 
 
-# Shorter, color print.
+# Shorter syntax, color print for one liners.
 def cprint(data, color: str, f=None):
     if f:
         print(colorize(data, color), f)
