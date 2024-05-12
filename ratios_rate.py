@@ -1,4 +1,4 @@
-from common_tools import get_data_list, clean_array_data, is_int, cprint
+from common_tools import get_data_list, clean_array_data, to_num, is_int, cprint
 from fractions import Fraction
 from tester import test_all
 
@@ -19,9 +19,9 @@ def ratio(numerator, denominator=1.0):
 
 
 def rate(ratio):
-    num, den = ratio.split("/")
+    num, den = to_num(*ratio.split("/"))
 
-    return is_int(float(num) / float(den))
+    return is_int(num / den)
 
 
 def print_result(data):
