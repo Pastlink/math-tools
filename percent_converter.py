@@ -1,83 +1,83 @@
 from common_tools import cprint, is_int, to_num
-from ratios_rate import simplify, ratio, rate
+from ratios_rate import ratio, rate
 
 
-def input_to_fraction(data):
-    # Convert data into a fraction, with this we get an equivalent for a
-    # percentage.
-
+# If data is a mixed number, convert data into an improper fraction,
+# else convert data into decimal number.
+# With this we get an equivalent for the percentage.
+def is_mixed_number(data: str) -> str:
     if "(" in data:
-        pos = data.index("(")
+        opn = data.index("(")
         div = data.index("/")
-        end = data.index(")")
+        cls = data.index(")")
 
-        asd = float(data[:pos])
-        num = float(data[pos + 1 : div])
-        den = float(data[div + 1 : end])
+        whl = float(data[:opn])
+        num = float(data[opn + 1 : div])
+        den = float(data[div + 1 : cls])
 
-        num = is_int((asd * den) + num)
+        num = is_int((whl * den) + num)
         den = is_int(den * 100)
 
-        data = f"{num}/{den}"
+        if data[cls + 1 :] == "%":
+            data = f"{num}/{den}"
+        else:
+            data = f"{is_int((num / den) * 100)}"
 
     return data
 
 
 # Convert data to percent.
-def percent(data):
-    if "/" in data:
+def percent(data: str) -> float | int:
+    fraction = "/" in data
+    percentage = "%" in data
+
+    if fraction and percentage:  # Check if data is a fraction of a percent.
+        num, den = data.split("/")
+        as_percent = float(num) / float(den[:-1])
+    elif fraction:  # Check if data is just a fraction.
         num, den = to_num(*data.split("/"))
-        data = num / den
-    elif "%" in data:
-        data = is_int(float(data[:-1])) / 100
+        as_percent = (num / den) * 100
+    elif not percentage:  # Check if data is a decimal.
+        as_percent = float(data) * 100
+    else:  # We can conclude that data is in fact a percent already.
+        as_percent = float(data[:-1])
 
-    if not isinstance(data, float):
-        data = float(data) / 100
-
-    as_percent = is_int(round(data * 100, 2))
-
-    return as_percent
+    return is_int(round(as_percent, 2))
 
 
-# Use ratios() to get the ratio per cent.
-def percent_to_ratio(percent_data, original_data=None):
-    as_ratio = ratio(percent_data, 100)
-
-    if as_ratio == "1/1" and original_data == "100":
-        as_ratio = "100/100"
-
-    return as_ratio
+# Use ratio() to get the ratio per cent.
+def percent_to_ratio(percent_data: float | int) -> str:
+    return ratio(percent_data, 100)
 
 
 # Use rate() to divide the fraction.
-def ratio_to_decimal(ratio_data):
-    return is_int(round(float(rate(ratio_data)), 4))
+def ratio_to_decimal(ratio_data: str) -> float | int:
+    return is_int(round(rate(ratio_data), 5))
 
 
-def format_data(data):
-    try:
-        as_ratio = input_to_fraction(data)
-        data = as_ratio
-        as_percent = percent(data)
-        as_ratio = simplify(*to_num(*as_ratio.split("/")))
-    except TypeError:
-        as_percent = percent(data)
-        as_ratio = percent_to_ratio(as_percent, data)
+# Calculate percentage, ratio and decimal values
+def format_data(data: str) -> tuple[float | int, str, float | int]:
+    data = is_mixed_number(data)
+    as_percent = percent(data)
+    if "%" not in data:
+        as_ratio = ratio(*to_num(*data.split("/")))
+    else:
+        as_ratio = percent_to_ratio(as_percent)
 
     as_decimal = ratio_to_decimal(as_ratio)
 
     return as_percent, as_ratio, as_decimal
 
 
-def print_result(data):
+def print_result(data: str) -> None:
     as_percent, as_ratio, as_decimal = format_data(data)
 
-    cprint("As Percent:", "GREEN", f"{as_percent}%")
-    cprint("As Ratio:", "BLUE", as_ratio)
+    cprint("As Percent:", "BLUE", f"{as_percent}%")
+    cprint("As Ratio:", "GREEN", as_ratio)
     cprint("As Decimal:", "RED", as_decimal)
 
 
-def main():
+def main() -> None:
     while True:
         data = input("Data: ")
         if data:
@@ -105,7 +105,11 @@ if __name__ == "__main__":
         "9(1/2)",
         "8(1/2)",
         "5(1/3)",
+        "5(1/3)%",
         "6(2/3)",
+        "6(2/3)%",
+        "6(4/5)",
+        "6(4/5)%",
     ]
 
     to_expect = [
@@ -116,10 +120,14 @@ if __name__ == "__main__":
         (125, "5/4", 1.25),
         (37.5, "3/8", 0.375),
         (18.4, "23/125", 0.184),
-        (9.5, "19/200", 0.095),
-        (8.5, "17/200", 0.085),
-        (5.33, "4/75", 0.0533),
-        (6.67, "1/15", 0.0667),
+        (950, "19/2", 9.5),
+        (850, "17/2", 8.5),
+        (533.33, "16/3", 5.33333),
+        (5.33, "4/75", 0.05333),
+        (666.67, "20/3", 6.66667),
+        (6.67, "1/15", 0.06667),
+        (680, "34/5", 6.8),
+        (6.8, "17/250", 0.068),
     ]
 
     test_all(format_data, to_test, to_expect)
