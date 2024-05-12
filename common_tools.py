@@ -1,9 +1,10 @@
-# Format input data and return list
-def get_data_list(prompt: str):
+### TEXT PARSERS
+# Format input data and return as list of relevant elements.
+def get_data_list(prompt: str) -> list[str]:
     return list(filter(None, input(f"{prompt}").split(" ")))
 
 
-# Change float to int if it is a whole number.
+# Change float to int if whole number.
 def is_int(num: float | int) -> float | int:
     if num.is_integer():
         return int(num)
@@ -11,8 +12,8 @@ def is_int(num: float | int) -> float | int:
         return num
 
 
-# Take any amount of number strings and cast into float or int
-def to_num(*strings):
+# Take any amount of number strings and cast into float or int, return as tuple.
+def to_num(*strings: str) -> tuple[int | float]:
     new_nums = []
     for string in strings:
         try:
@@ -24,36 +25,35 @@ def to_num(*strings):
 
 
 ### DATA CLEANERS
-# Iterate over array, return array of floats or number strings.
-def clean_array_data(array: list) -> list:
+# Iterate over array, return array of int or number strings.
+def clean_array_data(array: list) -> list[int | float]:
     clean_array = []
     for i in range(0, len(array)):
-        try:
-            clean_array.append(int(array[i]))
-        except ValueError:
+        try: # Try to cast sub array into float or int.
+            clean_array.append(is_int(float(array[i])))
+        except ValueError: # Clean sub array to extract possible numbers.
             new_value = clean_string(array[i])
-            try:
-                clean_array.append(int(new_value))
-            except ValueError:
+            try: # Try to append cleaned new float value.
+                clean_array.append(is_int(float(new_value)))
+            except ValueError: # Appends nothing.
                 clean_array.append(new_value)
 
     return list(filter(None, clean_array))
 
 
 # Iterate over string's chars, return floats, hours, fractions and percentage as strings.
-def clean_string(sub_array: str):
-    valid_symbols = [".", ":", "/", "%"]  # Keep float, hours and fractions and percentage.
+def clean_string(sub_array: str) -> str:
+    valid_symbols = [".", ":", "/", "%"]
     clean_values = ""
 
     for i in range(0, len(sub_array)):
-        try:
+        try: # If sub array's value can be cast into int, then it is a valid number.
             clean_values += str(int(sub_array[i]))
-        except ValueError:
+        except ValueError: # Else try to extract the number checking for valid symbols.
             if (
                 sub_array[i] in valid_symbols
                 and "." not in clean_values
-                or sub_array[i] == "-"
-            ):  # Also keep negative.
+                or sub_array[i] == "-"):
                 clean_values += sub_array[i]
             continue
 
@@ -91,8 +91,21 @@ def colorize(data, color: str):
 
 
 # Shorter syntax, color print for one liners.
-def cprint(data, color: str, f=None):
-    if f:
-        print(colorize(data, color), f)
+def cprint(data, color: str, func=None):
+    if func:
+        print(colorize(data, color), func)
     else:
         print(colorize(data, color))
+
+### COMPARERS
+# Compare inputs, return higher value
+def cmp(a: int | float, b: int | float) -> int | float | None:
+    if a > b:
+        cprint(f"{a} is higher.", "GREEN")
+        return a
+    elif a < b:
+        cprint(f"{b} is higher.", "GREEN")
+        return b
+    else:
+        cprint(f"{a} and {b} are equal.", "RED")
+        return None
