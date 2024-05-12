@@ -58,7 +58,6 @@ def print_result(n: int):
     factors, exponents = prime_factorization(n)
     cprint("Factors:", "BLUE", factors)
     cprint("Exponents:", "GREEN", exponents)
-    # print(colorize("Primes:", "RED"), prime_numbers(n))
 
 
 # Driver Program to test above function
@@ -75,35 +74,6 @@ def main():
             cprint("Back...", "YELLOW")
             break
 
-
-# def prime_numbers(n: int):
-#     MAX = 10000
-
-#     if n > MAX:
-#         ans = input(
-#             colorize(
-#                 f"""Your input goes over {MAX}!
-# Calculating its primes might take a long time.
-# Type 'YES, PRINT THEM' if you want to print them anyway. """,
-#                 "YELLOW",
-#             )
-#         )
-#         if ans != "YES, PRINT THEM":
-#             return "Skipped."
-
-#     primes = []
-
-#     if n < 2:
-#         return "None"
-
-#     for i in range(2, n + 1):
-#         for j in range(2, (i // 2) + 1):
-#             if i % j == 0:
-#                 break
-#         else:
-#             primes.append(str(i))
-
-#     return ", ".join(primes)
 
 if __name__ == "__main__":
     to_test = [
@@ -142,8 +112,6 @@ if __name__ == "__main__":
     ]
 
     test_all(prime_factorization, to_test, to_expect)
-
-    # main()
 
 # This code is contributed by Harshit Agrawal
 # Code Improved by Sarthak Shrivastava
