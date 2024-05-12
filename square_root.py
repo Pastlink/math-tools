@@ -26,11 +26,11 @@ def print_result(data):
         else:
             equal = "="
 
-        cprint(f'{data}²', "BLUE", f'= {square(data)}')
+        cprint(f"{data}²", "BLUE", f"= {square(data)}")
         if data < 0:
-            cprint(f'-√{data * -1}', "GREEN", f'{equal} {sq_root}')
+            cprint(f"-√{data * -1}", "GREEN", f"{equal} {sq_root}")
         else:
-            cprint(f'√{data}', "GREEN", f'{equal} {sq_root}')
+            cprint(f"√{data}", "GREEN", f"{equal} {sq_root}")
 
 
 def perfect_square_roots():
