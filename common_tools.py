@@ -6,10 +6,7 @@ def get_data_list(prompt: str) -> list[str]:
 
 # Change float to int if whole number.
 def is_int(num: float | int) -> float | int:
-    if num.is_integer():
-        return int(num)
-    else:
-        return num
+    return int(num) if num.is_integer() else num
 
 
 # Take any amount of number strings and cast into float or int, return as tuple.
@@ -28,7 +25,7 @@ def to_num(*strings: str) -> tuple[int | float]:
 # Iterate over array, return array of int or number strings.
 def clean_array_data(array: list) -> list[int | float]:
     clean_array = []
-    for i in range(0, len(array)):
+    for i in range(len(array)):
         try: # Try to cast sub array into float or int.
             clean_array.append(is_int(float(array[i])))
         except ValueError: # Clean sub array to extract possible numbers.
@@ -43,10 +40,10 @@ def clean_array_data(array: list) -> list[int | float]:
 
 # Iterate over string's chars, return floats, hours, fractions and percentage as strings.
 def clean_string(sub_array: str) -> str:
-    valid_symbols = [".", ":", "/", "%"]
+    valid_symbols = [".", ":", "/", "%", "(", ")"]
     clean_values = ""
 
-    for i in range(0, len(sub_array)):
+    for i in range(len(sub_array)):
         try: # If sub array's value can be cast into int, then it is a valid number.
             clean_values += str(int(sub_array[i]))
         except ValueError: # Else try to extract the number checking for valid symbols.
