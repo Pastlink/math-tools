@@ -5,6 +5,7 @@ import square_root
 import physics
 import circ_area
 import percent_converter
+import applied_percentage
 from common_tools import cprint, colorize
 
 
@@ -26,6 +27,7 @@ functions = [
     "Basic Physics",
     "Circumference and Area",
     "Percent",
+    "Applied Percentage",
 ]
 
 print("Options available:")
@@ -53,6 +55,8 @@ while True:
             circ_area.main()
         case 6:
             percent_converter.main()
+        case 7:
+            applied_percentage.main()
         case _:
             cprint("Exit...", "GREEN")
             break
