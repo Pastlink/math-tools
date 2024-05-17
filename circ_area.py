@@ -1,4 +1,4 @@
-from common_tools import cprint, is_int
+from common_tools import cprint, is_int, to_num
 
 
 def circumference(data):
@@ -10,16 +10,15 @@ def area(data):
 
 
 def handle_fractions(data):
-    num, den = data.split("/")
-
-    return is_int(round(int(num) / int(den), 5))
+    if "/" in data:
+        num, den = to_num(*data.split("/"))
+        data = round(num / den, 5)
+    
+    return is_int(float(data))
 
 
 def print_result(data):
-    if "/" in data:
-        data = handle_fractions(data)
-    else:
-        data = float(data)
+    data = handle_fractions(data)
 
     if not isinstance(data, int | float):
         cprint("No valid parameters!", "RED")
