@@ -1,12 +1,12 @@
 from common_tools import cprint, get_data_list, clean_array_data, is_int
 
 
-def mean(array: list):
+def mean(array: list) -> float | int:
     return is_int(round(sum(array) / len(array), 2))
 
 
 # Array should always be sorted, else result could be wrong.
-def median(array: list):
+def median(array: list) -> float | int:
     median_array = len(array) // 2
     if len(array) % 2 == 0:
         med = (array[median_array] + array[median_array - 1]) / 2
@@ -16,7 +16,7 @@ def median(array: list):
     return is_int(med)
 
 
-def mode(array: list):
+def mode(array: list) -> str:
     freq = {}
     mod = []
 
@@ -34,7 +34,7 @@ def mode(array: list):
         return " ".join(mod)
 
 
-def print_result(values: list):
+def print_result(values: list) -> None:
     if len(values) == 0:
         cprint("List is empty!", "RED")
     else:
@@ -44,7 +44,7 @@ def print_result(values: list):
         cprint("Mode:  ", "RED", mode(values))
 
 
-def main():
+def main() -> None:
     while True:
         values = get_data_list("Find average of: ")
         if values:
