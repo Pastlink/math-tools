@@ -12,16 +12,16 @@ def is_mixed_number(data: str) -> str:
         cls = data.index(")")
 
         whl = float(data[:opn])
-        num = float(data[opn + 1 : div])
-        den = float(data[div + 1 : cls])
+        num = float(data[opn + 1: div])
+        den = float(data[div + 1: cls])
 
         num = is_int((whl * den) + num)
         den = is_int(den * 100)
 
-        if data[cls + 1 :] == "%":
-            data = f"{num}/{den}"
+        if data[cls + 1:] == "%":
+            data = f"{num}/{den}" # Would return a fraction!
         else:
-            data = f"{is_int((num / den) * 100)}"
+            data = f"{is_int((num / den) * 100)}" # Would return a decimal!
 
     return data
 
