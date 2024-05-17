@@ -79,7 +79,7 @@ class colors:
 
 
 # Add color to text in the terminal!
-def colorize(data, color: str):
+def colorize(data, color: str) -> str:
     try:
         return f"{getattr(colors, color.upper())}{data}{colors.ENDCOLOR}"
     except AttributeError:
@@ -88,7 +88,7 @@ def colorize(data, color: str):
 
 
 # Shorter syntax, color print for one liners.
-def cprint(data, color: str, func=None):
+def cprint(data, color: str, func=None) -> None:
     if func:
         print(colorize(data, color), func)
     else:
