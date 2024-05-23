@@ -1,4 +1,4 @@
-from common_tools import colorize
+from common_tools import colorize, cprint
 
 
 def test(function_data, expected_data, test_name: str, test_num=0):
@@ -16,8 +16,8 @@ def test(function_data, expected_data, test_name: str, test_num=0):
         success = 0
         DATA = BAD
 
-    print(colorize("RECEIVED:", DATA), function_data)
-    print(colorize("EXPECTED:", "YELLOW"), expected_data)
+    cprint("RECEIVED:", DATA, function_data)
+    cprint("EXPECTED:", "YELLOW", expected_data)
 
     return success
 
@@ -29,7 +29,7 @@ def test_all(func, param: list, expected: list):
 
     print(f'DEBUG: {colorize(FUNC_TESTED, "BLUE")} TESTMODE\n')
 
-    for i in range(0, TEST_LENGTH):
+    for i in range(TEST_LENGTH):
         if isinstance(param[i], tuple):
             test_passed += test(func(*param[i]), expected[i], f"{FUNC_TESTED}{param[i]}", i)
         else:
