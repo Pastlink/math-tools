@@ -1,15 +1,14 @@
 from common_tools import get_data_list, clean_array_data, to_num, is_int, cprint
 from fractions import Fraction
-from tester import test_all
 
 
-def simplify(numerator, denominator):
+def simplify(numerator, denominator) -> str:
     num, den = Fraction(numerator), Fraction(denominator)
 
     return str(Fraction(num, den).limit_denominator(max_denominator=1000000))
 
 
-def ratio(numerator, denominator=1.0):
+def ratio(numerator, denominator=1.0) -> str:
     ratio = simplify(numerator, denominator)
 
     if "/" not in ratio:
@@ -18,8 +17,8 @@ def ratio(numerator, denominator=1.0):
     return ratio
 
 
-def rate(ratio):
-    num, den = to_num(*ratio.split("/"))
+def rate(ratio_data: str) -> float | int:
+    num, den = to_num(*ratio_data.split("/"))
 
     return is_int(num / den)
 
@@ -52,6 +51,8 @@ def main():
 
 
 if __name__ == "__main__":
+    from tester import test_all
+
     to_test = [
         ("5/4", "19/8"),
         (249, 39),
@@ -90,6 +91,6 @@ if __name__ == "__main__":
     test_all(ratio, to_test, to_expect)
 
     to_test = [ratio(3.99, 24)]
-    to_expect = ["0.166/1"]
+    to_expect = [0.16625]
 
     test_all(rate, to_test, to_expect)
