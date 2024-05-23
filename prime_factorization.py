@@ -1,7 +1,5 @@
-# Python program to print prime factors
 from math import sqrt
 from common_tools import cprint
-from tester import test_all
 
 
 # A function to print all prime factors of
@@ -16,26 +14,28 @@ def prime_factorization(n: int):
     elif n <= -1:
         n *= -1
         exponents.append("-1¹")
-    # Print the number of two's that divide n
+    # Append the number of two's that divide n
     expo = 0
     while n % 2 == 0:
         expo += 1
         prime_factors.append("2")
         n = n // 2
 
-    if n % 2 and expo != 0:
+    # Append exponent of the number of two's that divided n
+    if expo:
         exponents.append(f"{2}{get_super(str(expo))}")
 
     # n must be odd at this point
-    # so a skip of 2 ( i = i + 2) can be used
+    # so a skip of 2 (i = i + 2) can be used
     for i in range(3, int(sqrt(n)) + 1, 2):
         if n % i == 0:
             expo = 0
-            # while i divides n , print i and divide n
+            # while i divides n, append i and divide n
             while n % i == 0:
                 expo += 1
                 prime_factors.append(str(i))
                 n //= i
+            # Append exponents after while loop is done
             exponents.append(f"{i}{get_super(str(expo))}")
 
     # Condition if n is a prime
@@ -60,7 +60,6 @@ def print_result(n: int):
     cprint("Exponents:", "GREEN", exponents)
 
 
-# Driver Program to test above function
 def main():
     while True:
         n = input("Find factors of: ").strip()
@@ -76,6 +75,8 @@ def main():
 
 
 if __name__ == "__main__":
+    from tester import test_all
+
     to_test = [
         276,
         7000,
