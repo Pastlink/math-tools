@@ -80,6 +80,7 @@ if __name__ == "__main__":
         ["What", "percent", "of", "36", "is", "9"],
         ["144", "is", "what", "percent", "of", "96"],
         ["$16", "is", "20%", "of", "what", "number"],
+        ["$108.10", "is", "11.5%", "of", "what", "number"],
     ]
     to_expect = [
         "7.5% of $26 is $1.95.",
@@ -90,6 +91,7 @@ if __name__ == "__main__":
         "25% of 36 is 9.",
         "150% of 96 is 144.",
         "20% of $80 is $16.",
+        "11.5% of $940 is $108.1."
     ]
 
     test_all(format_data, to_test, to_expect)
