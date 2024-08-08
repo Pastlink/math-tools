@@ -1,7 +1,7 @@
 ### TEXT PARSERS
 # Format input data and return as list of relevant elements.
 def get_data_list(prompt: str) -> list[str]:
-    return list(filter(None, input(f"{prompt}").split(" ")))
+    return list(filter(None, input(prompt).split(" ")))
 
 
 # Change float to int if whole number.
@@ -10,14 +10,11 @@ def is_int(num: float | int, round_value=15) -> float | int:
         return int(num)
     else:
         num = round(num, round_value)
-        if num.is_integer():
-            return int(num)
-        else:
-            return num
+        return int(num) if num.is_integer() else num
 
 
-# Take any amount of number strings and cast into float or int, return as tuple.
-def to_num(*strings: str) -> tuple[int | float]:
+# Take strings and cast into float or int, return as tuple.
+def to_num(*strings: str) -> tuple[int | float, ...]:
     new_nums = []
     for string in strings:
         try:
@@ -30,7 +27,7 @@ def to_num(*strings: str) -> tuple[int | float]:
 
 ### DATA CLEANERS
 # Iterate over array, return array of int or number strings.
-def clean_array_data(array: list) -> list[int | float]:
+def clean_array_data(array: list) -> list[int | float | str]:
     clean_array = []
     for i in range(len(array)):
         try:  # Try to cast sub array into float or int.
@@ -55,6 +52,35 @@ def clean_string(sub_array: str) -> str:
             clean_values += str(int(sub_array[i]))
         except ValueError:  # Else try to extract the number checking for valid symbols.
             if sub_array[i] in valid_symbols and sub_array[i] not in clean_values:
+                clean_values += sub_array[i]
+            continue
+
+    return clean_values
+
+# Iterate over array, return array of ints or floats only.
+def clean_array_data_strict(array: list) -> list[int | float]:
+    clean_array = []
+    for i in range(len(array)):
+        try:  # Try to cast sub array into float or int.
+            clean_array.append(is_int(float(array[i])))
+        except ValueError:  # Clean sub array to extract possible numbers.
+            new_value = clean_string_strict(array[i])
+            try:  # Try to append cleaned new float value.
+                clean_array.append(is_int(float(new_value)))
+            except ValueError:  # Appends nothing.
+                clean_array.append(new_value)
+
+    return list(filter(None, clean_array))
+
+# Return strings of valid int or float only.
+def clean_string_strict(sub_array: str) -> str:
+    clean_values = ""
+
+    for i in range(len(sub_array)):
+        try:  # If sub array's value can be cast into int, then it is a valid number.
+            clean_values += str(int(sub_array[i]))
+        except ValueError:  # Else try to extract the number checking for valid symbols.
+            if sub_array[i] == "." and sub_array[i] not in clean_values:
                 clean_values += sub_array[i]
             continue
 
