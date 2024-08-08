@@ -112,15 +112,15 @@ def tax_calculator(data):
 
 
 def money_checker(data):
-    total, percent = tuple(clean_array_data(data))
+    val1, val2 = tuple(clean_array_data(data))
     money = ""
 
-    for i in (total, percent):
+    for i in (val1, val2):
         if isinstance(i, str) and "$" in i:
-            total = total[1:]
+            total = i[1:]
             money = "$"
         elif isinstance(i, str) and "%" in i:
-            percent = percent[:-1]
+            percent = i[:-1]
 
     total, percent = to_num(total, percent)
 
