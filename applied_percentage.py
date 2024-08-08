@@ -1,4 +1,11 @@
-from common_tools import cprint, is_int, to_num, get_data_list, clean_array_data, clean_array_data_strict
+from common_tools import (
+    cprint,
+    is_int,
+    to_num,
+    get_data_list,
+    clean_array_data,
+    clean_array_data_strict,
+)
 
 
 def format_data(data: str) -> str:
@@ -91,7 +98,7 @@ def calculate_percentage(data):
     else:
         result = is_int(total / decimal, 2)
         return f"{percent} of{dlls}{result} is{dlls}{total}"
-        
+
 
 def tax_calculator(data):
     ## USAGE: The sales tax is ??% of the purchase price
@@ -107,13 +114,13 @@ def tax_calculator(data):
 def money_checker(data):
     total, percent = tuple(clean_array_data(data))
     money = ""
-    if isinstance(total, str) and "$" in total:
-        total = total[1:]
-        if isinstance(percent, str) and "$" in percent:
-            percent = percent[1:]
-        money = "$"
-    if isinstance(percent, str) and "%" in percent:
-        percent = percent[:-1]
+
+    for i in (total, percent):
+        if isinstance(i, str) and "$" in i:
+            total = total[1:]
+            money = "$"
+        elif isinstance(i, str) and "%" in i:
+            percent = percent[:-1]
 
     total, percent = to_num(total, percent)
 
@@ -151,6 +158,10 @@ if __name__ == "__main__":
         ["percent", "of", "96", "is", "144"],
         ["$16", "is", "20%"],
         ["$108.10", "is", "11.5%"],
+        ["rise", "190", "to", "114"],
+        ["rise", "15.50", "to", "17.55"],
+        ["tax", "6.25%", "of", "$724"],
+        ["tax", "8.2%", "of", "$250"],
     ]
     to_expect = [
         "7.5% of $26 is $1.95",
@@ -162,6 +173,10 @@ if __name__ == "__main__":
         "150% of 96 is 144",
         "20% of $80 is $16",
         "11.5% of $940 is $108.1",
+        "114 is a decrease of 40% to 190",
+        "17.55 is an increase of 13.2% to 15.5",
+        "Tax rate:   6.25%\nSales tax:  $45.25\nTotal cost: $769.25",
+        "Tax rate:   8.2%\nSales tax:  $20.50\nTotal cost: $270.50",
     ]
 
     test_all(format_data, to_test, to_expect)
