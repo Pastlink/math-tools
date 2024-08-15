@@ -1,44 +1,43 @@
-from common_tools import (
-    cprint,
-    is_int,
-    to_num,
-    get_data_list,
-    clean_array_data,
-    clean_array_data_strict,
-)
+from common_tools import cprint, is_int, get_data_list, clean_array_data_strict
 
 
 def format_data(data: str) -> str:
-    if "rise" in data:
-        return increase_decrease_percent(data)
-    if "percent" in data:
-        return percent_of(data)
-    if "plus" in data:
-        return plus_percent(data)
-    if "tax" in data:
-        return tax_calculator(data)
-    else:
-        return calculate_percentage(data)
+    for keyword in data:
+        match keyword:
+            case "rise":
+                return increase_decrease_percent(data)
+            case "percent":
+                return percent_of(data)
+            case "plus":
+                return plus_percent(data)
+            case "tax":
+                return tax_calculator(data)
+            case "discount":
+                return discount(data)
+            case _:
+                return calculate_percentage(data)
 
 
 def increase_decrease_percent(data):
     ## USAGE: rise original to new
-    original, new, money = money_checker(data)
+    original, new, money = is_money(data)
 
     percent = is_int(((new - original) / original) * 100, 1)
 
     if percent > 0:
         in_or_de = "an increase"
-    else:
+    elif percent < 0:
         percent *= -1
         in_or_de = "a decrease"
+    else:
+        return "No change."
 
     return f"{money}{new} is {in_or_de} of {percent}% to {money}{original}"
 
 
 def percent_of(data):
     ## USAGE: 'What ??% of T (total) is R (result)
-    T, R, money = money_checker(data)
+    T, R, money = is_money(data)
 
     P = is_int((R / T) * 100, 2)
 
@@ -47,7 +46,7 @@ def percent_of(data):
 
 def plus_percent(data):
     ## USAGE: total plus ??%
-    total, percent, money = money_checker(data)
+    total, percent, money = is_money(data)
 
     result = total + is_int((percent / 100) * total, 2)
 
@@ -88,16 +87,16 @@ def calculate_percentage(data):
                 continue
 
     if money_flag:
-        dlls = " $"
+        dlls = "$"
     else:
-        dlls = " "
+        dlls = ""
 
     if total_value > percent_value:
         result = is_int(total * decimal, 2)
-        return f"{percent} of{dlls}{total} is{dlls}{result}"
+        return f"{percent} of {dlls}{total} is {dlls}{result}"
     else:
         result = is_int(total / decimal, 2)
-        return f"{percent} of{dlls}{result} is{dlls}{total}"
+        return f"{percent} of {dlls}{result} is {dlls}{total}"
 
 
 def tax_calculator(data):
@@ -105,26 +104,43 @@ def tax_calculator(data):
     data = calculate_percentage(data).split(" ")
 
     tax_rate, purchase_price, sale_tax = tuple(clean_array_data_strict(data))
-
     total_cost = purchase_price + sale_tax
 
     return f"Tax rate:   {tax_rate}%\nSales tax:  ${sale_tax:.2f}\nTotal cost: ${total_cost:.2f}"
 
 
-def money_checker(data):
-    val1, val2 = tuple(clean_array_data(data))
+def discount(data):
+    # amount of discount = discount rate * original price
+    # sale price = original price - discount
+    ## USAGE: discount ??% of price
+    discount_or_sale_price, original_price = tuple(clean_array_data_strict(data))
+    percent_flag = False
+
+    for i in data:
+        if "%" in i:
+            percent_flag = True
+
+    if percent_flag:        
+        discount_rate = discount_or_sale_price / 100
+    else:
+        discount_rate = (original_price - discount_or_sale_price) / original_price
+
+    amount_of_discount = is_int(discount_rate * original_price, 2)
+    sale_price = original_price - amount_of_discount
+
+    return f"The discount is ${amount_of_discount}. The total is ${sale_price} ({is_int(discount_rate * 100, 2)}% off)"
+
+
+def is_money(data: str):
     money = ""
 
-    for i in (val1, val2):
-        if isinstance(i, str) and "$" in i:
-            total = i[1:]
+    for i in data:
+        if not isinstance(i, int) and "$" in i:
             money = "$"
-        elif isinstance(i, str) and "%" in i:
-            percent = i[:-1]
 
-    total, percent = to_num(total, percent)
+    val1, val2 = tuple(clean_array_data_strict(data))
 
-    return total, percent, money
+    return val1, val2, money
 
 
 def print_result(data):
@@ -162,6 +178,8 @@ if __name__ == "__main__":
         ["rise", "15.50", "to", "17.55"],
         ["tax", "6.25%", "of", "$724"],
         ["tax", "8.2%", "of", "$250"],
+        ["discount", "35%", "of", "$140"],
+        ["discount", "$13.95", "of", "$31"],
     ]
     to_expect = [
         "7.5% of $26 is $1.95",
@@ -177,6 +195,8 @@ if __name__ == "__main__":
         "17.55 is an increase of 13.2% to 15.5",
         "Tax rate:   6.25%\nSales tax:  $45.25\nTotal cost: $769.25",
         "Tax rate:   8.2%\nSales tax:  $20.50\nTotal cost: $270.50",
+        "The discount is $49. The total is $91 (35% off)",
+        "The discount is $17.05. The total is $13.95 (55% off)",
     ]
 
     test_all(format_data, to_test, to_expect)
