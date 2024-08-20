@@ -9,12 +9,12 @@ import applied_percentage
 from common_tools import cprint, colorize
 
 
-def print_options(func_list: list):
+def print_options(func_list: list[str]) -> None:
     lst = []
     for i in range(0, len(func_list)):
         if i % 2 == 0 and i != 0:
             lst.append("\n")
-        lst.append(f'{colorize(i + 1, "GREEN")}: {func_list[i]} ')
+        lst.append(f"{colorize(i + 1, "GREEN")}: {func_list[i]}")
 
     print("".join(lst))
 
