@@ -27,7 +27,7 @@ def to_num(*strings: str) -> tuple[int | float, ...]:
 
 ### DATA CLEANERS
 # Iterate over array, return array of int or number strings.
-def clean_array_data(array: list) -> list[int | float | str]:
+def clean_array_data(array: list[str]) -> list[float | str]:
     clean_array = []
     for i in range(len(array)):
         try:  # Try to cast sub array into float or int.
@@ -36,10 +36,10 @@ def clean_array_data(array: list) -> list[int | float | str]:
             new_value = clean_string(array[i])
             try:  # Try to append cleaned new float value.
                 clean_array.append(is_int(float(new_value)))
-            except ValueError:  # Appends nothing.
-                clean_array.append(new_value)
+            except ValueError:
+                pass
 
-    return list(filter(None, clean_array))
+    return clean_array
 
 
 # Iterate over string's chars and return as strings with valid symbols.
@@ -58,7 +58,7 @@ def clean_string(sub_array: str) -> str:
     return clean_values
 
 # Iterate over array, return array of ints or floats only.
-def clean_array_data_strict(array: list) -> list[int | float]:
+def clean_array_data_strict(array: list[str]) -> list[int | float]:
     clean_array = []
     for i in range(len(array)):
         try:  # Try to cast sub array into float or int.
@@ -67,10 +67,10 @@ def clean_array_data_strict(array: list) -> list[int | float]:
             new_value = clean_string_strict(array[i])
             try:  # Try to append cleaned new float value.
                 clean_array.append(is_int(float(new_value)))
-            except ValueError:  # Appends nothing.
-                clean_array.append(new_value)
+            except ValueError:
+                pass
 
-    return list(filter(None, clean_array))
+    return clean_array
 
 # Return strings of valid int or float only.
 def clean_string_strict(sub_array: str) -> str:
@@ -79,7 +79,7 @@ def clean_string_strict(sub_array: str) -> str:
     for i in range(len(sub_array)):
         try:  # If sub array's value can be cast into int, then it is a valid number.
             clean_values += str(int(sub_array[i]))
-        except ValueError:  # Else try to extract the number checking for valid symbols.
+        except ValueError:  # Else try to extract the number checking for float points.
             if sub_array[i] == "." and sub_array[i] not in clean_values:
                 clean_values += sub_array[i]
             continue
@@ -109,7 +109,7 @@ class colors:
 
 
 # Add color to text in the terminal!
-def colorize(data, color: str) -> str:
+def colorize(data: str | float | tuple, color: str) -> str:
     try:
         return f"{getattr(colors, color.upper())}{data}{colors.ENDCOLOR}"
     except AttributeError:
@@ -118,7 +118,7 @@ def colorize(data, color: str) -> str:
 
 
 # Shorter syntax, color print for one liners.
-def cprint(data, color: str, func=None) -> None:
+def cprint(data: str | float, color: str, func=None) -> None:
     if func:
         print(colorize(data, color), func)
     else:
@@ -127,7 +127,7 @@ def cprint(data, color: str, func=None) -> None:
 
 ### COMPARERS
 # Compare inputs, return higher value
-def cmp(a: int | float, b: int | float) -> int | float | None:
+def cmp(a: float, b: float) -> float | None:
     if a > b:
         cprint(f"{a} is higher.", "GREEN")
         return a
@@ -136,4 +136,4 @@ def cmp(a: int | float, b: int | float) -> int | float | None:
         return b
     else:
         cprint(f"{a} and {b} are equal.", "RED")
-        return None
+        return a # Return {a} as both are the same.
