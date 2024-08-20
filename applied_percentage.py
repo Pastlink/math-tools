@@ -1,25 +1,27 @@
+from typing import Literal
 from common_tools import cprint, is_int, get_data_list, clean_array_data_strict
 
 
-def format_data(data: str) -> str:
+def format_data(data: list[str]) -> str:
     for keyword in data:
         match keyword:
             case "rise":
                 return increase_decrease_percent(data)
             case "percent":
                 return percent_of(data)
-            case "plus":
-                return plus_percent(data)
+            case "add":
+                return add_percent(data)
             case "tax":
                 return tax_calculator(data)
             case "discount":
                 return discount(data)
             case _:
                 return calculate_percentage(data)
+    return "No data found."
 
 
-def increase_decrease_percent(data):
-    ## USAGE: rise original to new
+def increase_decrease_percent(data: list[str]) -> str:
+    ## USAGE: rise {original} to {new}
     original, new, money = is_money(data)
 
     percent = is_int(((new - original) / original) * 100, 1)
@@ -35,8 +37,8 @@ def increase_decrease_percent(data):
     return f"{money}{new} is {in_or_de} of {percent}% to {money}{original}"
 
 
-def percent_of(data):
-    ## USAGE: 'What ??% of T (total) is R (result)
+def percent_of(data: list[str]) -> str:
+    ## USAGE: percent of {T} (total) is {R} (result)
     T, R, money = is_money(data)
 
     P = is_int((R / T) * 100, 2)
@@ -44,63 +46,38 @@ def percent_of(data):
     return f"{P}% of {money}{T} is {money}{R}"
 
 
-def plus_percent(data):
-    ## USAGE: total plus ??%
-    total, percent, money = is_money(data)
+def add_percent(data: list[str]) -> str:
+    ## USAGE: add {%} to {total}
+    percent, total, money = is_money(data)
 
     result = total + is_int((percent / 100) * total, 2)
 
     return f"{money}{total} plus {percent}% is {money}{result}"
 
 
-### Might rewrite this later, right now it looks like a mess.
-def calculate_percentage(data):
-    ## USAGE: ??% of ? is what
-    money_flag = False
-    percent_flag = False
-    percent = ""
-    total_value = 0
-    percent_value = 0
-    decimal = 0
-    total = 0
-    for i in data:
-        if percent_flag and money_flag:
-            break
+# Get relevant values and calculate percent based on wording
+def calculate_percentage(data: list[str]) -> str:
+    ## USAGE: {%} 'of' {value} or {value} 'is' {%}
+    percent, value, money = is_money(data)
+    invert_flag = False
 
-        percentage: bool = "%" in i
-        money: bool = "$" in i
+    if "is" in data: # Invert values if first value 'is' the total'
+        percent, value = value, percent
+        invert_flag = True
 
-        if percentage:
-            percent: str = i
-            percent_value: float | int = data.index(i)
-            decimal: float | int = is_int(float(i[:-1]) / 100, 4)
-            percent_flag = True
-        elif money:
-            total: float | int = is_int(float(i[1:]))
-            total_value: int = data.index(i)
-            money_flag = True
-        else:  # No money
-            try:
-                total: float | int = is_int(float(i))
-                total_value: int = data.index(i)
-            except ValueError:
-                continue
+    decimal = is_int(percent / 100, 4)
 
-    if money_flag:
-        dlls = "$"
+    if invert_flag:
+        total = value
     else:
-        dlls = ""
+        total = is_int(decimal * value, 4)
 
-    if total_value > percent_value:
-        result = is_int(total * decimal, 2)
-        return f"{percent} of {dlls}{total} is {dlls}{result}"
-    else:
-        result = is_int(total / decimal, 2)
-        return f"{percent} of {dlls}{result} is {dlls}{total}"
+    result = is_int(total / decimal, 2)
+    return f"{percent}% of {money}{result} is {money}{total}"
 
 
-def tax_calculator(data):
-    ## USAGE: The sales tax is ??% of the purchase price
+def tax_calculator(data: list[str]) -> str:
+    ## USAGE: tax is {%} of {purchase price}
     data = calculate_percentage(data).split(" ")
 
     tax_rate, purchase_price, sale_tax = tuple(clean_array_data_strict(data))
@@ -109,10 +86,10 @@ def tax_calculator(data):
     return f"Tax rate:   {tax_rate}%\nSales tax:  ${sale_tax:.2f}\nTotal cost: ${total_cost:.2f}"
 
 
-def discount(data):
+def discount(data: list[str]) -> str:
+    ## USAGE: discount {%} of {price}
     # amount of discount = discount rate * original price
     # sale price = original price - discount
-    ## USAGE: discount ??% of price
     discount_or_sale_price, original_price = tuple(clean_array_data_strict(data))
     percent_flag = False
 
@@ -120,22 +97,22 @@ def discount(data):
         if "%" in i:
             percent_flag = True
 
-    if percent_flag:        
+    if percent_flag:
         discount_rate = discount_or_sale_price / 100
-    else:
+    else:  # Most likely it is sale price
         discount_rate = (original_price - discount_or_sale_price) / original_price
 
     amount_of_discount = is_int(discount_rate * original_price, 2)
     sale_price = original_price - amount_of_discount
 
-    return f"The discount is ${amount_of_discount}. The total is ${sale_price} ({is_int(discount_rate * 100, 2)}% off)"
+    return f"Discounted: ${amount_of_discount}\nTotal to pay: ${sale_price} ({is_int(discount_rate * 100, 2)}% off)"
 
 
-def is_money(data: str):
+def is_money(data: list[str]) -> tuple[float, float, Literal["", "$"]]:
     money = ""
 
     for i in data:
-        if not isinstance(i, int) and "$" in i:
+        if "$" in i:
             money = "$"
 
     val1, val2 = tuple(clean_array_data_strict(data))
@@ -143,7 +120,7 @@ def is_money(data: str):
     return val1, val2, money
 
 
-def print_result(data):
+def print_result(data) -> None:
     cprint(format_data(data), "Blue")
 
 
@@ -195,8 +172,8 @@ if __name__ == "__main__":
         "17.55 is an increase of 13.2% to 15.5",
         "Tax rate:   6.25%\nSales tax:  $45.25\nTotal cost: $769.25",
         "Tax rate:   8.2%\nSales tax:  $20.50\nTotal cost: $270.50",
-        "The discount is $49. The total is $91 (35% off)",
-        "The discount is $17.05. The total is $13.95 (55% off)",
+        "Discounted: $49\nTotal to pay: $91 (35% off)",
+        "Discounted: $17.05\nTotal to pay: $13.95 (55% off)",
     ]
 
     test_all(format_data, to_test, to_expect)
