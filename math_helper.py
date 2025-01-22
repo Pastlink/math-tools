@@ -6,17 +6,7 @@ import physics
 import circ_area
 import percent_converter
 import applied_percentage
-from common_tools import cprint, colorize
-
-
-def print_options(func_list: list[str]) -> None:
-    lst = []
-    for i in range(0, len(func_list)):
-        if i % 2 == 0 and i != 0:
-            lst.append("\n")
-        lst.append(f"{colorize(i + 1, "GREEN")}: {func_list[i]}")
-
-    print("".join(lst))
+from common_tools import cprint, list_options
 
 
 functions = [
@@ -32,30 +22,30 @@ functions = [
 
 print("Options available:")
 while True:
-    print_options(functions)
+    list_options(functions)
     option = input("What do you want to do? ").strip()
     if option:
         try:
-            option = int(option) - 1
+            option = int(option)
         except ValueError:
-            cprint("Invalid input. Select using numbers.", "RED")
+            cprint("Invalid input. Select using numbers.", color="RED")
             continue
     match option:
-        case 0:
-            average_finder.main()
         case 1:
-            prime_factorization.main()
+            average_finder.main()
         case 2:
-            ratios_rate.main()
+            prime_factorization.main()
         case 3:
-            square_root.main()
+            ratios_rate.main()
         case 4:
-            physics.main()
+            square_root.main()
         case 5:
-            circ_area.main()
+            physics.main()
         case 6:
-            percent_converter.main()
+            circ_area.main()
         case 7:
+            percent_converter.main()
+        case 8:
             applied_percentage.main()
         case _:
             cprint("Exit...", "GREEN")

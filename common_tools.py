@@ -1,15 +1,19 @@
+from typing import Any
+import random
+
 ### TEXT PARSERS
 # Format input data and return as list of relevant elements.
+
 def get_data_list(prompt: str) -> list[str]:
     return list(filter(None, input(prompt).split(" ")))
 
 
 # Change float to int if whole number.
-def is_int(num: float | int, round_value=15) -> float | int:
+def is_int(num: float, round_value=15) -> float | int:
     if num.is_integer():
         return int(num)
     else:
-        num = round(num, round_value)
+        num = round(num, round_value) # Rounded value might be int, so check again
         return int(num) if num.is_integer() else num
 
 
@@ -57,8 +61,8 @@ def clean_string(sub_array: str) -> str:
 
     return clean_values
 
-# Iterate over array, return array of ints or floats only.
-def clean_array_data_strict(array: list[str]) -> list[int | float]:
+# Iterate over array, return array of floats or ints only.
+def clean_array_data_strict(array: list[str]) -> list[float | int]:
     clean_array = []
     for i in range(len(array)):
         try:  # Try to cast sub array into float or int.
@@ -109,7 +113,7 @@ class colors:
 
 
 # Add color to text in the terminal!
-def colorize(data: str | float | tuple, color: str) -> str:
+def colorize(data: Any, color: str) -> str:
     try:
         return f"{getattr(colors, color.upper())}{data}{colors.ENDCOLOR}"
     except AttributeError:
@@ -118,11 +122,11 @@ def colorize(data: str | float | tuple, color: str) -> str:
 
 
 # Shorter syntax, color print for one liners.
-def cprint(data: str | float, color: str, func=None) -> None:
-    if func:
-        print(colorize(data, color), func)
+def cprint(flavor_text: str, color: str = "BLUE", data: Any = "", end: str | None = "\n") -> None:
+    if data:
+        print(colorize(flavor_text, color), data, end=end)
     else:
-        print(colorize(data, color))
+        print(colorize(flavor_text, color), end=end)
 
 
 ### COMPARERS
@@ -137,3 +141,13 @@ def cmp(a: float, b: float) -> float | None:
     else:
         cprint(f"{a} and {b} are equal.", "RED")
         return a # Return {a} as both are the same.
+
+### LISTERS
+def list_options(func_list: list[str], enum = True) -> None:
+    lst = []
+    for i in range(0, len(func_list)):
+        if i % 2 == 0 and i != 0:
+            lst.append("\n")
+        lst.append(f"{colorize(i + 1, "GREEN")}: {func_list[i]} ")
+
+    print("".join(lst))

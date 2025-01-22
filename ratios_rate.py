@@ -1,4 +1,4 @@
-from common_tools import get_data_list, clean_array_data, to_num, is_int, cprint
+from common_tools import get_data_list, clean_array_data_strict, to_num, is_int, cprint
 from fractions import Fraction
 
 
@@ -24,14 +24,14 @@ def rate(ratio_data: str) -> float | int:
 
 
 def print_result(data):
-    params = tuple(clean_array_data(data))
+    params = tuple(clean_array_data_strict(data))
     if len(params) == 0:
         cprint("No valid parameters!", "RED")
     elif len(params) > 2:
         cprint("No more than 2 parameters!", "RED")
     else:
         ratios = ratio(*params)
-        rates = round(rate(ratios), 3)
+        rates = is_int(rate(ratios), 3)
         cprint("Ratio:", "BLUE", ratios)
         cprint("Rate: ", "GREEN", f"{rates}/1")
 

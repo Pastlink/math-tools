@@ -1,11 +1,12 @@
+from typing import Any, Callable
 from common_tools import colorize, cprint
 
 
-def test(function_data, expected_data, test_name: str, test_num=0):
+def test(function_data: Any, expected_data: str, test_name: str, test_num=0):
     GOOD = "GREEN"
     BAD = "RED"
 
-    print(f'TEST {test_num+1}: {colorize(test_name, "BLUE")} ', end="")
+    print(f"TEST {test_num+1}: {colorize(test_name, "BLUE")} ", end="")
 
     if function_data == expected_data:
         print(f"{colorize("PASSED!", GOOD)}")
@@ -22,7 +23,7 @@ def test(function_data, expected_data, test_name: str, test_num=0):
     return success
 
 
-def test_all(func, param: list, expected: list):
+def test_all(func: Callable[..., Any], param: list[Any], expected: list[Any]):
     FUNC_TESTED = func.__name__
     TEST_LENGTH = len(param)
     test_passed = 0
