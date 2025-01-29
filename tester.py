@@ -6,14 +6,14 @@ def test(function_data: Any, expected_data: str, test_name: str, test_num=0):
     GOOD = "GREEN"
     BAD = "RED"
 
-    print(f"TEST {test_num+1}: {colorize(test_name, "BLUE")} ", end="")
+    print(f"TEST {test_num+1}: {colorize(test_name, 'BLUE')} ", end="")
 
     if function_data == expected_data:
-        print(f"{colorize("PASSED!", GOOD)}")
+        print(f"{colorize('PASSED!', GOOD)}")
         success = 1
         DATA = GOOD
     else:
-        print(f"{colorize("FAILED!", BAD)}")
+        print(f"{colorize('FAILED!', BAD)}")
         success = 0
         DATA = BAD
 
