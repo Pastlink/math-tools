@@ -1,7 +1,7 @@
 from typing import Literal
 from common_tools import cprint, is_int, get_data_list, clean_array_data_strict, list_options
 
-def format_data(function: str) -> None:
+def format_data(function) -> None:
     try:
         function = int(function)
     except ValueError:
@@ -103,6 +103,21 @@ def format_data(function: str) -> None:
                 cprint("Interest: ", "blue", f"${interest:.2f}")
                 cprint("Principal:", "blue", f"${principal:.2f}")
                 cprint("Rate:     ", "blue", f"{is_int(rate*100, 2)}%")
+        case 8:
+            cprint("Usage: {(num/den)} = {(num/den)}")
+
+            while True:
+                data = ask_function_data(proportion.__name__, "Data: ")
+                    
+                if data:
+                    answer, var_name, var_value = proportion(data)
+                else:
+                    cprint("Back...", "Yellow")
+                    return
+                
+                cprint("Proportion:", "blue", answer)
+                if var_name:
+                    cprint("Variable:  ", "blue", f"{var_name} = {is_int(var_value)}")
         case _:
             try:
                 percent, money, decimal, total, result  = calculate_percentage(function.split(" "))
@@ -242,6 +257,33 @@ def simple_interest(data: list[str]) -> tuple[float | int, float | int, float | 
             P = is_int((I / r) / t)
 
         return I, P, r
+
+
+
+def proportion(data: list[str]):
+
+    if "=" in data:
+        data.remove("=")
+
+    num_1, den_1 = data[0].split("/")
+    num_2, den_2 = data[1].split("/")
+
+    fraction_data_list = [num_1, den_1, num_2, den_2]
+
+    for i in fraction_data_list:
+        if isinstance(i, str):
+            var_name = i
+
+            var_value = int(num_2) / int(den_2) * int(den_1)
+            break
+
+    if var_value:
+        result_1 = var_value * int(den_2)
+    else:
+        result_1 = int(num_1) * int(den_2)
+    result_2 = int(num_2) * int(den_1)
+
+    return result_1 == result_2, var_name, var_value
 
 
 def ask_function_data(func_name: str, prompt: str) -> list[str]:
