@@ -1,4 +1,6 @@
 from typing import Literal
+#import re
+#import sympy as sp
 from common_tools import cprint, is_int, get_data_list, clean_array_data_strict, list_options
 
 def format_data(function) -> None:
@@ -103,24 +105,44 @@ def format_data(function) -> None:
                 cprint("Interest: ", "blue", f"${interest:.2f}")
                 cprint("Principal:", "blue", f"${principal:.2f}")
                 cprint("Rate:     ", "blue", f"{is_int(rate*100, 2)}%")
-        case 8:
-            cprint("Usage: {(num/den)} = {(num/den)}")
+        # case 8:
+        #     cprint("Usage: {(num/den)} = {(num/den)}")
 
-            while True:
-                data = ask_function_data(proportion.__name__, "Data: ")
+        #     while True:
+        #         data = ask_function_data(proportion.__name__, "Data: ")
                     
-                if data:
-                    answer, var_name, var_value = proportion(data)
-                else:
-                    cprint("Back...", "Yellow")
-                    return
+        #         if data:
+        #             equation = " ".join([x for x in data])
+
+        #         matches = re.findall(r'(-?\d+|[a-zA-Z])', equation)
+
+        #         if len(matches) != 4:
+        #             cprint("Invalid input format. Use 'a/b = c/d' format.", "YELLOW")
+        #             continue
+                    
+        #         print(matches)
+
+
+        #             # **Examples of use**
+        #         print(proportion("49/56 = 7/8"))   # True
+        #         print(proportion("x/56 = 7/8"))    # x = 49
+        #         print(proportion("9/x = 39/34"))   # x = 34 * 9 / 39
+        #         print(proportion("56/72 = y/9"))   # y = (9 * 56) / 72
+        #         print(proportion("72/156 = -6/q")) # q = (-6 * 156) / 72
+
+        #         return
                 
-                cprint("Proportion:", "blue", answer)
-                if var_name:
-                    cprint("Variable:  ", "blue", f"{var_name} = {is_int(var_value)}")
+        #             #answer, var_name, var_value = proportion(data)
+        #         #else:
+        #         #    cprint("Back...", "Yellow")
+        #         #    return
+                
+        #         #cprint("Proportion:", "blue", answer)
+        #         #if var_name:
+        #         #    cprint("Variable:  ", "blue", f"{var_name} = {is_int(var_value)}")
         case _:
             try:
-                percent, money, decimal, total, result  = calculate_percentage(function.split(" "))
+                percent, money, decimal, total, result  = calculate_percentage(str(function).split(" "))
                 cprint(f"{percent}% of {money}{result} is {money}{total}")
             except ValueError:
                 cprint("Use the name of the function. Please try again.", "YELLOW")
@@ -182,9 +204,9 @@ def calculate_percentage(data: list[str]) -> tuple[float, Literal['', '$'], floa
     if substract_flag:
         total = value
     else:
-        total = is_int(decimal * value, 4)
+        total = is_int(float(decimal) * value, 4)
 
-    result = is_int(total / decimal, 2)
+    result = is_int(float(total) / decimal, 2)
     return percent, money, decimal, total, result
 
 ### Add way to know tax rate if one isn't given. tax_rate = sale_tax/purchase_price
@@ -260,30 +282,30 @@ def simple_interest(data: list[str]) -> tuple[float | int, float | int, float | 
 
 
 
-def proportion(data: list[str]):
+# def proportion(data: str):
+#         # Extract values
+#     a, b, c, d = data
 
-    if "=" in data:
-        data.remove("=")
+#     # Convert numbers to integers, keep variables as symbols
+#     a = sp.symbols(a) if a.isalpha() else int(a)
+#     b = sp.symbols(b) if b.isalpha() else int(b)
+#     c = sp.symbols(c) if c.isalpha() else int(c)
+#     d = sp.symbols(d) if d.isalpha() else int(d)
 
-    num_1, den_1 = data[0].split("/")
-    num_2, den_2 = data[1].split("/")
+#     # Check if there is a variable
+#     variables = [x for x in [a, b, c, d] if isinstance(x, sp.Symbol)]
+    
+#     # Solve proportion
+#     if variables:
+#         var = variables[0]  # Assume only one variable
+#         equation = sp.Eq(a * d, b * c)  # Cross multiplication
+#         solution = sp.solve(equation, var)
+#         return f"{var} = {solution[0]}"
+#     else:
+#         # Check if proportion is true
+#         return (a / b) == (c / d)
 
-    fraction_data_list = [num_1, den_1, num_2, den_2]
-
-    for i in fraction_data_list:
-        if isinstance(i, str):
-            var_name = i
-
-            var_value = int(num_2) / int(den_2) * int(den_1)
-            break
-
-    if var_value:
-        result_1 = var_value * int(den_2)
-    else:
-        result_1 = int(num_1) * int(den_2)
-    result_2 = int(num_2) * int(den_1)
-
-    return result_1 == result_2, var_name, var_value
+    #return result_1 == result_2, var_name, var_value
 
 
 def ask_function_data(func_name: str, prompt: str) -> list[str]:
